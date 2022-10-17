@@ -14,6 +14,7 @@ export const Button = styled.button`
   margin-top: 50px;
   &:hover {
     color: white;
+    cursor: pointer;
   }
 `
 export const LeftSide = styled.div`
@@ -47,6 +48,11 @@ export const Logo = styled.div`
 `
 export const Image = styled.div`
   display: flex;
-  align-items: ;
+  align-items: center;
+  justify-content: center;
 `
-export const Title = styled.div``
+export const Title = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
