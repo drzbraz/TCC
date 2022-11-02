@@ -42,9 +42,7 @@ export default function Login() {
         </Styles.LeftSide>
         <Styles.RightSide>
           <Styles.Logo>
-            <Styles.Image>
-              <Image src="/../public/assets/medical.webp" width={200} height={200} />
-            </Styles.Image>
+            <Styles.Image>{/* <Image src="/../public/assets/doctor.svg" width={200} height={200} /> */}</Styles.Image>
             <Styles.Title>Welcoming to login</Styles.Title>
           </Styles.Logo>
         </Styles.RightSide>
