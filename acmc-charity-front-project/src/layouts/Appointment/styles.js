@@ -22,12 +22,3 @@ export const Menus = styled.div`
     filter: brightness(0.9);
   }
 `
-
-export const Title = styled.div`
-  z-index: 100;
-  position: absolute;
-  left: 1em;
-  top: 1em;
-  font-size: 36px;
-  font-weight: bold;
-`
