@@ -13,7 +13,6 @@ export default function Home() {
         width="1840"
         height="1000"
       />
-      <Styles.Title>Welcoming to login</Styles.Title>
     </>
   )
 }
