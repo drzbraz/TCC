@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider'
 import { Button } from '@mui/material'
 
 import { useRouter } from 'next/router'
-export default function PatientEdit({ params }) {
+export default function PatientNew({ params }) {
   const [patient, setPatient] = useState({})
   const [name, setName] = useState('')
   const [cpf, setCpf] = useState('')
@@ -28,7 +28,7 @@ export default function PatientEdit({ params }) {
     <>
       <Header />
       <Styles.Form>
-        <b>Editar paciente </b>
+        <b> Novo paciente </b>
         <Styles.Row>
           <TextField
             id="name"

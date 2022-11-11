@@ -1,5 +1,8 @@
 import styled from '@emotion/styled'
 
+export const Container = styled.div`
+  padding: 50px 200px;
+`
 export const Header = styled.div`
   width: 100%;
   background-color: red;
