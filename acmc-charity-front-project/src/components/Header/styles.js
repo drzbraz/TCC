@@ -11,11 +11,13 @@ export const Header = styled.div`
 `
 export const SocialMedia = styled.div`
   width: 100%;
+  color: white;
   background-color: rgb(45, 56, 94, 1);
   height: 2rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding-right: 15px;
+  justify-content: flex-end;
   top: 0;
   position: absolute;
 `

@@ -136,7 +136,7 @@ export default function PatientEdit({ params }) {
           color="secondary"
           onClick={() => router.push(`patient/edit/${row.id}`)}
         >
-          Confirmar
+          Salvar
         </Button>
         <Button
           variant="contained"

@@ -6,13 +6,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <Image
-        alt="background image"
-        style={{ position: 'relative' }}
-        src="/../public/assets/background.png"
-        width="1840"
-        height="1000"
-      />
+      <Image alt="background image" src="/../public/assets/background.png" width="1840" height="830" />
     </>
   )
 }

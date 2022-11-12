@@ -11,6 +11,8 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
@@ -125,7 +127,12 @@ export default function Patient() {
                     <TableCell align="center">{row.fat}</TableCell>
                     <TableCell align="center">{row.carbs}</TableCell>
                     <TableCell align="center">
-                      <Button onClick={() => router.push(`patient/edit/${row.id}`)}>Editar</Button>
+                      <Button onClick={() => router.push(`patient/edit/${row.id}`)}>
+                        <EditIcon />
+                      </Button>
+                      <Button onClick={() => router.push(`patient/edit/${row.id}`)}>
+                        <DeleteIcon />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
