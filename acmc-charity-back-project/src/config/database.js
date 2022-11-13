@@ -2,11 +2,10 @@ export default {
   dialect: 'postgres',
   host: 'localhost',
   username: 'postgres',
-  password: 'docker',
-  database: 'gobarber',
+  password: 'password',
+  database: 'acmc',
   define: {
-    timestamps: true,
-    underscored: true,
-    underscoredAll: true,
+    timestamp: true,
+    underscore: true,
   },
 };
