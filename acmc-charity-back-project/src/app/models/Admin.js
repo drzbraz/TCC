@@ -17,7 +17,6 @@ class Admin extends Model {
     );
 
     this.addHook('beforeSave', async (user) => {
-      console.log('jereeeeeeeee');
       if (user.password) {
         user.password_hash = await bcrypt.hash(user.password, 8);
       }

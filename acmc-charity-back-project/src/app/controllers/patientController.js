@@ -59,7 +59,6 @@ class PatientController {
       state: Yup.string().required(),
       userId: Yup.number().required(),
     });
-    console.log(req.body);
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
@@ -75,7 +74,6 @@ class PatientController {
     const schema = Yup.object().shape({
       userId: Yup.number().required(),
     });
-    console.log(req.body);
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
@@ -115,7 +113,6 @@ class PatientController {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
     });
-    console.log(req.query.name);
 
     if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
