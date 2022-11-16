@@ -3,7 +3,8 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { onAuthenticate } from '../../infra/api'
 import { useCookies } from 'react-cookie'
-
+import Doctor from './../../../public/assets/doctor.svg'
+// import LoginImg from './../../../public/assets/login.svg'
 import * as Styles from './styles'
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -19,10 +20,17 @@ export default function Login() {
       <Styles.Container>
         <Styles.LeftSide>
           <Styles.Content>
+            <h2 style={{ textAlign: 'center' }}>Entre com a sua conta</h2>
+            <p style={{ textAlign: 'center', marginBottom: '62px' }}>
+              Não tem uma ainda?{' '}
+              <a className="lnk-toggler" style={{ color: '#4f77ff' }} href="#">
+                Entre aqui.
+              </a>
+            </p>
             <Styles.Input>
               <TextField
                 id="standard-basic"
-                label="Login"
+                label="Email"
                 variant="standard"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -42,8 +50,10 @@ export default function Login() {
         </Styles.LeftSide>
         <Styles.RightSide>
           <Styles.Logo>
-            <Styles.Image>{/* <Image src="/../public/assets/doctor.svg" width={200} height={200} /> */}</Styles.Image>
-            <Styles.Title>Welcoming to login</Styles.Title>
+            <Styles.Image>
+              <Image src={Doctor} alt={'Doctor image'} width={500} height={500} />
+            </Styles.Image>
+            <Styles.Title>Bem-vindo a ACMC</Styles.Title>
           </Styles.Logo>
         </Styles.RightSide>
       </Styles.Container>

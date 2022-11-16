@@ -6,7 +6,7 @@ export default function Signature(props) {
   return (
     <Styles.Form
       // style={{ overflow: 'hidden', height: 0 }}
-      style={{ display: `${props.isActive ? 'flex' : 'none'}`, alignItems: 'center', justifyContent: 'center' }}
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
     >
       <p>----------------------------------------------------------</p>
       Assinatura

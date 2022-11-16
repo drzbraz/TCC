@@ -20,6 +20,7 @@ const AppointmentForm = React.forwardRef((props, ref) => {
   const [doctorName, setDoctorName] = useState('')
   const [doctorCpf, setDoctorCpf] = useState('')
   const [doctorBirthday, setDoctorBirthday] = useState('')
+  const [appointment, setAppointment] = useState('')
   const [diagnosis, setDiagnosis] = useState('')
 
   const router = useRouter()
@@ -83,6 +84,17 @@ const AppointmentForm = React.forwardRef((props, ref) => {
           {() => <TextField label="Data de nascimento" />}
         </InputMask>
       </Styles.Row>
+      <Styles.Row style={{ justifyContent: 'flex-start', width: '732px' }}>
+        <InputMask
+          mask="99/99/9999"
+          value={appointment}
+          placeholder="Data da consulta"
+          onChange={(e) => setAppointment(e.target.value)}
+          id="appointment"
+        >
+          {() => <TextField label="Data da consulta" />}
+        </InputMask>
+      </Styles.Row>
       <Styles.Row>
         <TextField
           id="diagnosis"
@@ -95,6 +107,7 @@ const AppointmentForm = React.forwardRef((props, ref) => {
           onChange={(e) => setDiagnosis(e.target.value)}
         />
       </Styles.Row>
+      <Signature />
     </Styles.Form>
   )
 })

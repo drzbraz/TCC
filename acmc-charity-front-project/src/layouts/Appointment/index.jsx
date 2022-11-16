@@ -13,12 +13,15 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import TextField from '@mui/material/TextField'
+import SearchIcon from '@mui/icons-material/Search'
 
 export default function Appointment() {
   const router = useRouter()
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [searchAppointment, setSearchAppointment] = useState('')
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -34,7 +37,7 @@ export default function Appointment() {
   }
 
   const rows = [
-    createData(1, 'Daniel Braz', 'Marcelo Reis', '18/07/2022'),
+    createData(1, 'Daniel Braz', 'Bernardo Mafra', '18/07/2022'),
     createData(2, 'Yuri Sales', 'Daniel Evangelista', '18/08/2022'),
     createData(3, 'Esdras Aguilar', 'Marcus Eugenio', '18/09/2022'),
     createData(4, 'Lucas Ravacini', 'Lucas Augusto', '18/10/2022'),
@@ -53,6 +56,36 @@ export default function Appointment() {
             onClick={() => router.push(`appointment/new`)}
           >
             Novo cadastro
+          </Button>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            textAlign: 'center',
+            alignItems: 'center',
+            paddingBottom: '32px'
+          }}
+        >
+          <TextField
+            id="searchAppointment"
+            label="Buscar por paciente ou médico"
+            value={searchAppointment}
+            style={{ width: '400px' }}
+            variant="outlined"
+            onChange={(e) => setSearchAppointment(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="secondary"
+            style={{
+              height: '40px',
+              marginLeft: '12px'
+            }}
+            onClick={() => router.push(`patient/new`)}
+          >
+            {' '}
+            <SearchIcon />
           </Button>
         </div>
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>

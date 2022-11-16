@@ -1,5 +1,5 @@
 import * as Styles from './styles'
-import Header from './../../components/Header'
+import Header from '../../components/Header'
 import { Button } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
@@ -13,6 +13,8 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import TextField from '@mui/material/TextField'
+import SearchIcon from '@mui/icons-material/Search'
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
@@ -69,6 +71,7 @@ export default function Doctor() {
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [searchDoctor, setSearchDoctor] = useState('')
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -103,6 +106,36 @@ export default function Doctor() {
             onClick={() => router.push(`doctor/new`)}
           >
             Novo cadastro
+          </Button>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            textAlign: 'center',
+            alignItems: 'center',
+            paddingBottom: '32px'
+          }}
+        >
+          <TextField
+            id="searchDoctor"
+            label="Buscar médico"
+            value={searchDoctor}
+            style={{ width: '400px' }}
+            variant="outlined"
+            onChange={(e) => setSearchDoctor(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="secondary"
+            style={{
+              height: '40px',
+              marginLeft: '12px'
+            }}
+            onClick={() => router.push(`patient/new`)}
+          >
+            {' '}
+            <SearchIcon />
           </Button>
         </div>
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>

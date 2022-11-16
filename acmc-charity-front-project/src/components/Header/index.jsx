@@ -23,7 +23,7 @@ export default function Header({ children }) {
             <a style={{ color: `${isMenuActive('home') ? 'rgb(0 22 98)' : 'white'}` }}>Home</a>
           </Link>
           <Link href="/patient">
-            <a style={{ color: `${isMenuActive('patient') ? 'rgb(0 22 98)' : 'white'}` }}>Paciente</a>
+            <a style={{ color: `${isMenuActive('patient') ? 'rgb(0 22 98)' : 'white'}` }}>Pacientes</a>
           </Link>
           <Link href="/doctor">
             <a style={{ color: `${isMenuActive('doctor') ? 'rgb(0 22 98)' : 'white'}` }}>Médicos</a>

@@ -8,18 +8,14 @@ import Divider from '@mui/material/Divider'
 import { Button } from '@mui/material'
 
 import { useRouter } from 'next/router'
-export default function DoctorEdit({ params }) {
+export default function DoctorNew({ params }) {
   const [patient, setPatient] = useState({})
   const [name, setName] = useState('')
   const [cpf, setCpf] = useState('')
   const [birthday, setBirthday] = useState('')
   const [contact, setContact] = useState('')
   const [zipCode, setZipCode] = useState('')
-  const [street, setStreet] = useState('')
-  const [number, setNumber] = useState('')
-  const [neighborhood, setNeighborhood] = useState('')
-  const [city, setCity] = useState('')
-  const [state, setState] = useState('')
+  const [email, setEmail] = useState('')
 
   const router = useRouter()
   const { id } = router.query
@@ -28,7 +24,7 @@ export default function DoctorEdit({ params }) {
     <>
       <Header />
       <Styles.Form>
-        <b>Editar médico </b>
+        <b> Novo médico </b>
         <Styles.Row>
           <TextField
             id="name"
@@ -59,6 +55,9 @@ export default function DoctorEdit({ params }) {
           >
             {() => <TextField style={{ margin: '20px' }} label="Data de nascimento" />}
           </InputMask>
+        </Styles.Row>
+        <b>Contato</b>
+        <Styles.Row>
           <InputMask
             mask="(99) 99999-9999"
             value={contact}
@@ -69,63 +68,13 @@ export default function DoctorEdit({ params }) {
           >
             {() => <TextField style={{ margin: '20px' }} label="Contato" />}
           </InputMask>
-        </Styles.Row>
-        <b>Endereço</b>
-        <Styles.Row>
           <TextField
-            id="street"
-            label="Rua"
-            value={street}
+            id="email"
+            label="Email"
+            value={email}
             variant="outlined"
             style={{ margin: '20px' }}
-            onChange={(e) => setStreet(e.target.value)}
-          />
-          <TextField
-            id="number"
-            label="Número"
-            value={number}
-            variant="outlined"
-            style={{ margin: '20px' }}
-            onChange={(e) => setNumber(e.target.value)}
-          />
-
-          <InputMask
-            mask="99999-999"
-            value={zipCode}
-            placeholder="Cep"
-            style={{ margin: '20px' }}
-            onChange={(e) => setZipCode(e.target.value)}
-            id="zipCode"
-          >
-            {() => <TextField style={{ margin: '20px' }} label="Cep" />}
-          </InputMask>
-        </Styles.Row>
-        <Styles.Row>
-          <TextField
-            id="neighborhood"
-            label="Bairro"
-            value={neighborhood}
-            variant="outlined"
-            style={{ margin: '20px' }}
-            onChange={(e) => setNeighborhood(e.target.value)}
-          />
-
-          <TextField
-            id="city"
-            label="Cidade"
-            value={city}
-            variant="outlined"
-            style={{ margin: '20px' }}
-            onChange={(e) => setCity(e.target.value)}
-          />
-
-          <TextField
-            id="state"
-            label="Estado"
-            value={state}
-            variant="outlined"
-            style={{ margin: '20px' }}
-            onChange={(e) => setState(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </Styles.Row>
       </Styles.Form>

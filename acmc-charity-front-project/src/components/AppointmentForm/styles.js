@@ -10,7 +10,7 @@ export const Header = styled.div`
 `
 
 export const Form = styled.div`
-  padding: 50px 20px 0px 20px;
+  padding: 20px 20px 0px 20px;
   display: flex;
   justify-content: center;
   align-items: center;

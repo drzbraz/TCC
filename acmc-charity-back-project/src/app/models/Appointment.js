@@ -5,8 +5,10 @@ class Appointment extends Model {
   static init(sequelize) {
     super.init(
       {
-        date: Sequelize.DATE,
-        canceled_at: Sequelize.DATE,
+        patient_id: Sequelize.NUMBER,
+        doctor_id: Sequelize.NUMBER,
+        date: Sequelize.STRING,
+        diagnoses: Sequelize.STRING,
       },
       {
         sequelize,
@@ -16,8 +18,8 @@ class Appointment extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
-    this.belongsTo(models.User, { foreignKey: 'provider_id', ad: 'provider' });
+    this.hasMany(models.Patient, { foreignKey: 'id', as: 'patient' });
+    this.hasMany(models.Doctor, { foreignKey: 'id', as: 'doctor' });
   }
 }
 export default Appointment;

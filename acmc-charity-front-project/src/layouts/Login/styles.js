@@ -22,6 +22,9 @@ export const LeftSide = styled.div`
   width: 600px;
   height: auto;
   padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 export const RightSide = styled.div`
   background-color: rgb(45, 56, 94, 0.9);
@@ -35,7 +38,7 @@ export const RightSide = styled.div`
   align-items: center;
 `
 export const Content = styled.div`
-  margin-top: 400px;
+  margin-top: 200px;
 `
 
 export const Input = styled.div`

@@ -29,6 +29,7 @@ export const Menus = styled.div`
   width: 700px;
   color: white;
   font-weight: bold;
+  font-size: 20px;
   a:hover {
     filter: brightness(0.9);
   }
