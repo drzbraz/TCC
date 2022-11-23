@@ -6,6 +6,8 @@ import InputMask from 'react-input-mask'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { Button } from '@mui/material'
+import { getPatient, updatePatient } from '../../infra/api.js'
+import { toast } from 'react-toastify'
 
 import { useRouter } from 'next/router'
 export default function PatientEdit({ params }) {
@@ -13,7 +15,7 @@ export default function PatientEdit({ params }) {
   const [name, setName] = useState('')
   const [cpf, setCpf] = useState('')
   const [birthday, setBirthday] = useState('')
-  const [contact, setContact] = useState('')
+  const [phone, setPhone] = useState('')
   const [zipCode, setZipCode] = useState('')
   const [street, setStreet] = useState('')
   const [number, setNumber] = useState('')
@@ -23,6 +25,67 @@ export default function PatientEdit({ params }) {
 
   const router = useRouter()
   const { id } = router.query
+
+  async function update(patient) {
+    const statusCode = await updatePatient({
+      userId: id,
+      name,
+      cpf,
+      birthday,
+      phone,
+      zipCode,
+      street,
+      number,
+      neighborhood,
+      city,
+      state
+    })
+    if (statusCode === 200) {
+      toast.success('Salvo com sucesso 😁', {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored'
+      })
+      router.push('/patient')
+      return
+    }
+    toast.error('Ops algo deu errado 😅', {
+      position: 'bottom-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored'
+    })
+  }
+
+  async function getPatientInfo(patientId) {
+    const patient = await getPatient(patientId)
+
+    setName(patient.name)
+    setCpf(patient.cpf)
+    setBirthday(patient.birthday)
+    setPhone(patient.phone)
+    setZipCode(patient.zipCode)
+    setStreet(patient.street)
+    setNumber(patient.number)
+    setNeighborhood(patient.neighborhood)
+    setCity(patient.city)
+    setState(patient.state)
+  }
+
+  useEffect(() => {
+    if (id) {
+      getPatientInfo(id)
+    }
+  }, [id])
 
   return (
     <>
@@ -61,10 +124,10 @@ export default function PatientEdit({ params }) {
           </InputMask>
           <InputMask
             mask="(99) 99999-9999"
-            value={contact}
+            value={phone}
             placeholder="Contato"
             style={{ margin: '20px' }}
-            onChange={(e) => setContact(e.target.value)}
+            onChange={(e) => setPhone(e.target.value)}
             id="contact"
           >
             {() => <TextField style={{ margin: '20px' }} label="Contato" />}
@@ -130,12 +193,7 @@ export default function PatientEdit({ params }) {
         </Styles.Row>
       </Styles.Form>
       <Styles.Row>
-        <Button
-          variant="contained"
-          style={{ marginRight: '24px' }}
-          color="secondary"
-          onClick={() => router.push(`patient/edit/${row.id}`)}
-        >
+        <Button variant="contained" style={{ marginRight: '24px' }} color="secondary" onClick={() => update(patient)}>
           Salvar
         </Button>
         <Button

@@ -10,11 +10,14 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TextField from '@mui/material/TextField'
 import SearchIcon from '@mui/icons-material/Search'
+import { getPatientList, deletePatient, searchPatientRequest } from '../../infra/api.js'
+import { toast } from 'react-toastify'
+
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
   { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
@@ -65,13 +68,45 @@ const rows = [
 ]
 
 export default function Patient() {
-  console.log('list')
   const router = useRouter()
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [searchPatient, setSearchPatient] = useState('')
+  const [patientList, setPatientList] = useState([])
 
+  async function getPatient() {
+    const patient = await getPatientList(0, 5)
+    setPatientList(patient)
+  }
+
+  async function search(name) {
+    console.log(name, 'test')
+    const patient = await searchPatientRequest(name)
+    setPatientList(patient)
+  }
+
+  async function deletePatientInfo(patientId) {
+    const shouldDelete = confirm('Deseja excluir o paciente?')
+    if (shouldDelete) {
+      await deletePatient(patientId)
+      getPatient()
+      toast.info('Excluído com sucesso 😁', {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored'
+      })
+    }
+  }
+
+  useEffect(() => {
+    getPatient()
+  }, [])
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
@@ -131,9 +166,8 @@ export default function Patient() {
               height: '40px',
               marginLeft: '12px'
             }}
-            onClick={() => router.push(`patient/new`)}
+            onClick={() => search(searchPatient)}
           >
-            {' '}
             <SearchIcon />
           </Button>
         </div>
@@ -150,19 +184,19 @@ export default function Patient() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                {patientList?.map((patient) => (
+                  <TableRow key={patient.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell component="th" scope="row">
-                      {row.name}
+                      {patient.name}
                     </TableCell>
-                    <TableCell align="center">{row.calories}</TableCell>
-                    <TableCell align="center">{row.fat}</TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
+                    <TableCell align="center">{patient.birthday}</TableCell>
+                    <TableCell align="center">{patient.cpf}</TableCell>
+                    <TableCell align="center">{patient.phone}</TableCell>
                     <TableCell align="center">
-                      <Button onClick={() => router.push(`patient/edit/${row.id}`)}>
+                      <Button onClick={() => router.push(`patient/edit/${patient.id}`)}>
                         <EditIcon />
                       </Button>
-                      <Button onClick={() => router.push(`patient/edit/${row.id}`)}>
+                      <Button onClick={() => deletePatientInfo(patient.id)}>
                         <DeleteIcon />
                       </Button>
                     </TableCell>
@@ -174,7 +208,7 @@ export default function Patient() {
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
-            count={rows.length}
+            count={patientList?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

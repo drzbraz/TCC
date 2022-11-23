@@ -66,7 +66,6 @@ const rows = [
 ]
 
 export default function Doctor() {
-  console.log('list')
   const router = useRouter()
 
   const [page, setPage] = useState(0)

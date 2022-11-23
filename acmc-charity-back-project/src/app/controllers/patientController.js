@@ -1,4 +1,5 @@
 import Patient from '../models/Patient.js';
+import Appointment from '../models/Appointment.js';
 import * as Yup from 'yup';
 
 import Sequelize from 'sequelize';
@@ -33,16 +34,17 @@ class PatientController {
   }
 
   async delete(req, res) {
-    const { userId } = req.body;
+    const { patientId } = req.query;
 
-    if (!userId) {
+    if (!patientId) {
       return res.status(400).json({ error: 'Validation fails, need user id' });
     }
 
-    const condition = { where: { id: userId } };
+    const condition = { where: { id: patientId } };
 
-    const { name } = await Patient.destroy(condition);
-    res.json({ name });
+    await Appointment.destroy(condition);
+    await Patient.destroy(condition);
+    res.json();
   }
 
   async update(req, res) {
@@ -71,15 +73,16 @@ class PatientController {
     return res.json();
   }
   async get(req, res) {
+    console.log(req.query);
     const schema = Yup.object().shape({
-      userId: Yup.number().required(),
+      patientId: Yup.number().required(),
     });
 
-    if (!(await schema.isValid(req.body))) {
+    if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const user = await Patient.findOne({ where: { id: req.body.userId } });
+    const user = await Patient.findOne({ where: { id: req.query.patientId } });
 
     if (!user) {
       return res.status(401).json({ error: 'User not found' });
@@ -94,12 +97,12 @@ class PatientController {
       limit: Yup.number().required(),
     });
 
-    if (!(await schema.isValid(req.body))) {
+    if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
     const users = await Patient.findAll({
-      offset: req.body.offset,
-      limit: req.body.limit,
+      offset: req.query.offset,
+      limit: req.query.limit,
     });
 
     if (!users) {
@@ -111,13 +114,20 @@ class PatientController {
 
   async getByName(req, res) {
     const schema = Yup.object().shape({
-      name: Yup.string().required(),
+      name: Yup.string(),
     });
 
     if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
     const Op = Sequelize.Op;
+    if (req.query.name === '') {
+      const users = await Patient.findAll({
+        offset: req.query.offset,
+        limit: req.query.limit,
+      });
+      return res.json(users);
+    }
 
     const users = await Patient.findAll({
       where: {

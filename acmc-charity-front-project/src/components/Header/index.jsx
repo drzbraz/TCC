@@ -7,7 +7,6 @@ export default function Header({ children }) {
   const router = useRouter()
 
   function isMenuActive(menu) {
-    console.log(router)
     return !!router.pathname.includes(menu)
   }
 

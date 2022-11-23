@@ -5,14 +5,14 @@ import DoctorController from './app/controllers/doctorController.js';
 import AppointmentController from './app/controllers/appointmentController.js';
 import AdminController from './app/controllers/adminController.js';
 
-import authMiddleware from './app/middlewares/auth.js';
+// import authMiddleware from './app/middlewares/auth.js';
 
 const routes = new Router();
 
 routes.post('/v1/admin', AdminController.store);
 routes.post('/v1/admin/auth', AdminController.auth);
 routes.put('/v1/admin/auth', AdminController.update);
-routes.use(authMiddleware);
+// routes.use(authMiddleware);
 
 // PATIENT
 routes.post('/v1/patient', PatientController.store);

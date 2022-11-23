@@ -8,12 +8,15 @@ import Divider from '@mui/material/Divider'
 import { Button } from '@mui/material'
 
 import { useRouter } from 'next/router'
+import { createPatient } from '../../infra/api.js'
+import { toast } from 'react-toastify'
+
 export default function PatientNew({ params }) {
   const [patient, setPatient] = useState({})
   const [name, setName] = useState('')
   const [cpf, setCpf] = useState('')
   const [birthday, setBirthday] = useState('')
-  const [contact, setContact] = useState('')
+  const [phone, setPhone] = useState('')
   const [zipCode, setZipCode] = useState('')
   const [street, setStreet] = useState('')
   const [number, setNumber] = useState('')
@@ -24,6 +27,45 @@ export default function PatientNew({ params }) {
   const router = useRouter()
   const { id } = router.query
 
+  async function createNewPatient() {
+    const statusCode = await createPatient({
+      userId: id,
+      name,
+      cpf,
+      birthday,
+      phone,
+      zipCode,
+      street,
+      number,
+      neighborhood,
+      city,
+      state
+    })
+    if (statusCode === 200) {
+      toast.success('Salvo com sucesso 😁', {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored'
+      })
+      router.push('/patient')
+      return
+    }
+    toast.error('Ops algo deu errado 😅', {
+      position: 'bottom-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored'
+    })
+  }
   return (
     <>
       <Header />
@@ -61,10 +103,10 @@ export default function PatientNew({ params }) {
           </InputMask>
           <InputMask
             mask="(99) 99999-9999"
-            value={contact}
+            value={phone}
             placeholder="Contato"
             style={{ margin: '20px' }}
-            onChange={(e) => setContact(e.target.value)}
+            onChange={(e) => setPhone(e.target.value)}
             id="contact"
           >
             {() => <TextField style={{ margin: '20px' }} label="Contato" />}
@@ -134,7 +176,7 @@ export default function PatientNew({ params }) {
           variant="contained"
           style={{ marginRight: '24px' }}
           color="secondary"
-          onClick={() => router.push(`patient/edit/${row.id}`)}
+          onClick={() => createNewPatient()}
         >
           Confirmar
         </Button>
