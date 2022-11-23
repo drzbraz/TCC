@@ -15,7 +15,9 @@ export default function Header({ children }) {
       <Styles.Header>
         <Styles.SocialMedia>
           <InstagramIcon style={{ marginRight: '8px' }} />
-          @noticias_da_acmc_e_do_bairro
+          <a href="https://www.instagram.com/noticias_da_acmc_e_do_bairro/" target="_blank" rel="noreferrer">
+            @noticias_da_acmc_e_do_bairro
+          </a>
         </Styles.SocialMedia>
         <Styles.Menus>
           <Link href="/home">

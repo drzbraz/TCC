@@ -10,11 +10,13 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TextField from '@mui/material/TextField'
 import SearchIcon from '@mui/icons-material/Search'
+import { getDoctorList, deleteDoctor, searchDoctorRequest } from '../../infra/api.js'
+import { toast } from 'react-toastify'
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
@@ -71,6 +73,7 @@ export default function Doctor() {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [searchDoctor, setSearchDoctor] = useState('')
+  const [doctorList, setDoctorList] = useState([])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -92,6 +95,40 @@ export default function Doctor() {
     createData(4, 'Lucas Ravacini', '14/01/1988', '113.992.888-15', '(31) 9999-9999'),
     createData(5, 'Lucas Duarte', '09/02/1980', '113.998.588-15', '(31) 9999-9999')
   ]
+
+  async function search(name) {
+    console.log(name, 'test')
+    const doctors = await searchDoctorRequest(name)
+    console.log(doctors)
+    setDoctorList(doctors)
+  }
+
+  async function getDoctor(page, rowsPerPage) {
+    const doctor = await getDoctorList(0, 5)
+    setDoctorList(doctor)
+  }
+
+  async function deleteDoctorInfo(doctorId) {
+    const shouldDelete = confirm('Deseja excluir o médico?')
+    if (shouldDelete) {
+      await deleteDoctor(doctorId)
+      getDoctor(page, rowsPerPage)
+      toast.info('Excluído com sucesso 😁', {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored'
+      })
+    }
+  }
+  useEffect(() => {
+    getDoctor(page, rowsPerPage)
+  }, [])
+
   return (
     <>
       <Header />
@@ -131,9 +168,8 @@ export default function Doctor() {
               height: '40px',
               marginLeft: '12px'
             }}
-            onClick={() => router.push(`patient/new`)}
+            onClick={() => search(searchDoctor)}
           >
-            {' '}
             <SearchIcon />
           </Button>
         </div>
@@ -150,21 +186,21 @@ export default function Doctor() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                {doctorList?.map((patient) => (
+                  <TableRow key={patient.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell component="th" scope="row">
-                      {row.name}
+                      {patient.name}
                     </TableCell>
-                    <TableCell align="center">{row.calories}</TableCell>
-                    <TableCell align="center">{row.fat}</TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
+                    <TableCell align="center">{patient.birthday}</TableCell>
+                    <TableCell align="center">{patient.cpf}</TableCell>
+                    <TableCell align="center">{patient.phone}</TableCell>
                     <TableCell align="center">
-                      <Button onClick={() => router.push(`doctor/edit/${row.id}`)}>
+                      <Button onClick={() => router.push(`doctor/edit/${patient.id}`)}>
                         <EditIcon />
                       </Button>
-                      <Button onClick={() => router.push(`doctor/edit/${row.id}`)}>
+                      <Button onClick={() => deleteDoctorInfo(patient.id)}>
                         <DeleteIcon />
-                      </Button>{' '}
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -172,9 +208,9 @@ export default function Doctor() {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[5, 10]}
             component="div"
-            count={rows.length}
+            count={doctorList?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

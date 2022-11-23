@@ -11,7 +11,6 @@ import { toast } from 'react-toastify'
 
 import { useRouter } from 'next/router'
 export default function PatientEdit({ params }) {
-  const [patient, setPatient] = useState({})
   const [name, setName] = useState('')
   const [cpf, setCpf] = useState('')
   const [birthday, setBirthday] = useState('')
@@ -26,7 +25,7 @@ export default function PatientEdit({ params }) {
   const router = useRouter()
   const { id } = router.query
 
-  async function update(patient) {
+  async function update() {
     const statusCode = await updatePatient({
       userId: id,
       name,
@@ -69,16 +68,16 @@ export default function PatientEdit({ params }) {
   async function getPatientInfo(patientId) {
     const patient = await getPatient(patientId)
 
-    setName(patient.name)
-    setCpf(patient.cpf)
-    setBirthday(patient.birthday)
-    setPhone(patient.phone)
-    setZipCode(patient.zipCode)
-    setStreet(patient.street)
-    setNumber(patient.number)
-    setNeighborhood(patient.neighborhood)
-    setCity(patient.city)
-    setState(patient.state)
+    setName(patient?.name)
+    setCpf(patient?.cpf)
+    setBirthday(patient?.birthday)
+    setPhone(patient?.phone)
+    setZipCode(patient?.zipCode)
+    setStreet(patient?.street)
+    setNumber(patient?.number)
+    setNeighborhood(patient?.neighborhood)
+    setCity(patient?.city)
+    setState(patient?.state)
   }
 
   useEffect(() => {
@@ -193,7 +192,7 @@ export default function PatientEdit({ params }) {
         </Styles.Row>
       </Styles.Form>
       <Styles.Row>
-        <Button variant="contained" style={{ marginRight: '24px' }} color="secondary" onClick={() => update(patient)}>
+        <Button variant="contained" style={{ marginRight: '24px' }} color="secondary" onClick={() => update()}>
           Salvar
         </Button>
         <Button

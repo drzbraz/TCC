@@ -5,6 +5,64 @@ export const api = axios.create({
   baseURL: 'http://localhost:3333/'
 })
 
+export const getDoctorList = async (offset, limit) => {
+  try {
+    const response = await api.get('/v1/doctor/all', { params: { offset, limit } })
+    const data = response.data
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const createDoctor = async (doctor) => {
+  try {
+    const response = await api.post('/v1/doctor', { ...doctor })
+    console.log(response)
+    return response.status
+  } catch (error) {
+    return error.response.status
+  }
+}
+
+export const updateDoctor = async (doctor) => {
+  try {
+    const response = await api.put('/v1/doctor', { ...doctor })
+    console.log(response)
+    return response.status
+  } catch (error) {
+    return error.response.status
+  }
+}
+
+export const searchDoctorRequest = async (name) => {
+  try {
+    const response = await api.get(`/v1/doctor/find`, { params: { name } })
+    const data = response.data
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getDoctor = async (doctorId) => {
+  try {
+    const response = await api.get(`/v1/doctor`, { params: { doctorId } })
+    const data = response.data
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const deleteDoctor = async (doctorId) => {
+  try {
+    const response = await api.delete(`/v1/doctor`, { params: { doctorId } })
+    const data = response.data
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const getPatientList = async (offset, limit) => {
   try {
     const response = await api.get('/v1/patient/all', { params: { offset, limit } })

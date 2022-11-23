@@ -28,13 +28,13 @@ class DoctorController {
   }
 
   async delete(req, res) {
-    const { userId } = req.body;
+    const { doctorId } = req.query;
 
-    if (!userId) {
+    if (!doctorId) {
       return res.status(400).json({ error: 'Validation fails, need user id' });
     }
 
-    const condition = { where: { id: userId } };
+    const condition = { where: { id: doctorId } };
 
     const { name } = await Doctor.destroy(condition);
     res.json({ name });
@@ -64,12 +64,12 @@ class DoctorController {
       doctorId: Yup.number().required(),
     });
 
-    if (!(await schema.isValid(req.body))) {
+    if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
     const user = await Doctor.findOne({
-      where: { id: req.body.doctorId },
+      where: { id: req.query.doctorId },
     });
 
     if (!user) {
@@ -85,12 +85,12 @@ class DoctorController {
       limit: Yup.number().required(),
     });
 
-    if (!(await schema.isValid(req.body))) {
+    if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
     const users = await Doctor.findAll({
-      offset: req.body.offset,
-      limit: req.body.limit,
+      offset: req.query.offset,
+      limit: req.query.limit,
     });
 
     if (!users) {
@@ -102,13 +102,20 @@ class DoctorController {
 
   async getByName(req, res) {
     const schema = Yup.object().shape({
-      name: Yup.string().required(),
+      name: Yup.string(),
     });
 
     if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
     const Op = Sequelize.Op;
+    if (req.query.name === '') {
+      const users = await Doctor.findAll({
+        offset: req.query.offset,
+        limit: req.query.limit,
+      });
+      return res.json(users);
+    }
 
     const users = await Doctor.findAll({
       where: {

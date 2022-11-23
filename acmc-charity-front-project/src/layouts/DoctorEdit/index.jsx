@@ -6,20 +6,70 @@ import InputMask from 'react-input-mask'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { Button } from '@mui/material'
+import { getDoctor, updateDoctor } from '../../infra/api.js'
+import { toast } from 'react-toastify'
 
 import { useRouter } from 'next/router'
 export default function DoctorNew({ params }) {
-  const [patient, setPatient] = useState({})
   const [name, setName] = useState('')
   const [cpf, setCpf] = useState('')
   const [birthday, setBirthday] = useState('')
-  const [contact, setContact] = useState('')
-  const [zipCode, setZipCode] = useState('')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
 
   const router = useRouter()
   const { id } = router.query
 
+  async function update() {
+    const statusCode = await updateDoctor({
+      userId: id,
+      name,
+      cpf,
+      birthday,
+      phone,
+      email
+    })
+    if (statusCode === 200) {
+      toast.success('Salvo com sucesso 😁', {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored'
+      })
+      router.push('/doctor')
+      return
+    }
+    toast.error('Ops algo deu errado 😅', {
+      position: 'bottom-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored'
+    })
+  }
+
+  async function getPatientInfo(patientId) {
+    const patient = await getDoctor(patientId)
+
+    setName(patient?.name)
+    setCpf(patient?.cpf)
+    setBirthday(patient?.birthday)
+    setPhone(patient?.phone)
+    setEmail(patient?.email)
+  }
+
+  useEffect(() => {
+    if (id) {
+      getPatientInfo(id)
+    }
+  }, [id])
   return (
     <>
       <Header />
@@ -60,11 +110,11 @@ export default function DoctorNew({ params }) {
         <Styles.Row>
           <InputMask
             mask="(99) 99999-9999"
-            value={contact}
+            value={phone}
             placeholder="Contato"
             style={{ margin: '20px' }}
-            onChange={(e) => setContact(e.target.value)}
-            id="contact"
+            onChange={(e) => setPhone(e.target.value)}
+            id="phone"
           >
             {() => <TextField style={{ margin: '20px' }} label="Contato" />}
           </InputMask>
@@ -79,12 +129,7 @@ export default function DoctorNew({ params }) {
         </Styles.Row>
       </Styles.Form>
       <Styles.Row>
-        <Button
-          variant="contained"
-          style={{ marginRight: '24px' }}
-          color="secondary"
-          onClick={() => router.push(`patient/edit/${row.id}`)}
-        >
+        <Button variant="contained" style={{ marginRight: '24px' }} color="secondary" onClick={() => update()}>
           Salvar
         </Button>
         <Button

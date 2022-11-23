@@ -71,11 +71,11 @@ export default function Patient() {
   const router = useRouter()
 
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
   const [searchPatient, setSearchPatient] = useState('')
   const [patientList, setPatientList] = useState([])
 
-  async function getPatient() {
+  async function getPatient(page, rowsPerPage) {
     const patient = await getPatientList(0, 5)
     setPatientList(patient)
   }
@@ -90,7 +90,7 @@ export default function Patient() {
     const shouldDelete = confirm('Deseja excluir o paciente?')
     if (shouldDelete) {
       await deletePatient(patientId)
-      getPatient()
+      getPatient(page, rowsPerPage)
       toast.info('Excluído com sucesso 😁', {
         position: 'bottom-right',
         autoClose: 3000,
@@ -105,9 +105,9 @@ export default function Patient() {
   }
 
   useEffect(() => {
-    getPatient()
+    getPatient(page, rowsPerPage)
   }, [])
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = async (event, newPage) => {
     setPage(newPage)
   }
 
@@ -206,9 +206,9 @@ export default function Patient() {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[5, 10]}
             component="div"
-            count={patientList?.length}
+            count={patientList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
