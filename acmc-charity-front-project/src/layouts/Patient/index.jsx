@@ -208,7 +208,7 @@ export default function Patient() {
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component="div"
-            count={patientList.length}
+            count={patientList?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

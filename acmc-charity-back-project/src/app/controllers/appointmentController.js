@@ -35,7 +35,7 @@ class AppointmentController {
   }
 
   async delete(req, res) {
-    const { appointmentId } = req.body;
+    const { appointmentId } = req.query;
 
     if (!appointmentId) {
       return res.status(400).json({ error: 'Validation fails, need user id' });
@@ -75,12 +75,12 @@ class AppointmentController {
       appointmentId: Yup.number().required(),
     });
 
-    if (!(await schema.isValid(req.body))) {
+    if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
     const user = await Appointment.findOne({
-      where: { id: req.body.appointmentId },
+      where: { id: req.query.appointmentId },
     });
 
     if (!user) {
@@ -111,12 +111,12 @@ class AppointmentController {
       limit: Yup.number().required(),
     });
 
-    if (!(await schema.isValid(req.body))) {
+    if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
     const users = await Appointment.findAll({
-      offset: req.body.offset,
-      limit: req.body.limit,
+      offset: req.query.offset,
+      limit: req.query.limit,
       include: [{ association: 'patient' }, { association: 'doctor' }],
     });
 
@@ -129,13 +129,21 @@ class AppointmentController {
 
   async getByName(req, res) {
     const schema = Yup.object().shape({
-      name: Yup.string().required(),
+      name: Yup.string(),
     });
 
     if (!(await schema.isValid(req.query))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
     const Op = Sequelize.Op;
+    if (req.query.name === '') {
+      const users = await Appointment.findAll({
+        offset: req.query.offset,
+        limit: req.query.limit,
+        include: [{ association: 'patient' }, { association: 'doctor' }],
+      });
+      return res.json(users);
+    }
 
     const users = await Appointment.findAll({
       include: [

@@ -36,8 +36,8 @@ class DoctorController {
 
     const condition = { where: { id: doctorId } };
 
-    const { name } = await Doctor.destroy(condition);
-    res.json({ name });
+    await Doctor.destroy(condition);
+    res.json();
   }
 
   async update(req, res) {

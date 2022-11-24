@@ -1,19 +1,37 @@
 import TextField from '@mui/material/TextField'
 import Image from 'next/image'
 import { useState } from 'react'
-import { onAuthenticate } from '../../infra/api'
+import { onAuthenticate, api } from '../../infra/api'
 import { useCookies } from 'react-cookie'
 import Doctor from './../../../public/assets/doctor.svg'
+import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
+
 // import LoginImg from './../../../public/assets/login.svg'
 import * as Styles from './styles'
-export default function Login() {
+export default function Login(props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [token, setToken] = useCookies(['token'])
+  const router = useRouter()
 
   async function makeLogin() {
     const myToken = await onAuthenticate(email, password)
     setToken('token', myToken)
+    if (!!myToken) {
+      router.push('/home')
+      return
+    }
+    toast.error('Ops algo deu errado 😅', {
+      position: 'bottom-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored'
+    })
   }
   return (
     <>
@@ -23,7 +41,12 @@ export default function Login() {
             <h2 style={{ textAlign: 'center' }}>Entre com a sua conta</h2>
             <p style={{ textAlign: 'center', marginBottom: '62px' }}>
               Não tem uma ainda?{' '}
-              <a className="lnk-toggler" style={{ color: '#4f77ff' }} href="#">
+              <a
+                className="lnk-toggler"
+                href="mailto:drz.braz@gmail.com?CC=novo acesso"
+                style={{ color: '#4f77ff' }}
+                rel="noreferrer"
+              >
                 Entre aqui.
               </a>
             </p>

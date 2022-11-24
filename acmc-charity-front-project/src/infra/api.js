@@ -5,6 +5,63 @@ export const api = axios.create({
   baseURL: 'http://localhost:3333/'
 })
 
+export const getAppointmentList = async (offset, limit) => {
+  try {
+    const response = await api.get('/v1/appointment/all', { params: { offset, limit } })
+    const data = response.data
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const createAppointment = async (appointment) => {
+  try {
+    const response = await api.post('/v1/appointment', { ...appointment })
+    return response.status
+  } catch (error) {
+    return error.response.status
+  }
+}
+
+export const updateAppointment = async (appointment) => {
+  try {
+    const response = await api.put('/v1/appointment', { ...appointment })
+    console.log(response)
+    return response.status
+  } catch (error) {
+    return error.response.status
+  }
+}
+
+export const searchAppointmentRequest = async (name) => {
+  try {
+    const response = await api.get(`/v1/appointment/find`, { params: { name } })
+    const data = response.data
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getAppointment = async (appointmentId) => {
+  try {
+    const response = await api.get(`/v1/appointment`, { params: { appointmentId } })
+    const data = response.data
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const deleteAppointment = async (appointmentId) => {
+  try {
+    const response = await api.delete(`/v1/appointment`, { params: { appointmentId } })
+    const data = response.data
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const getDoctorList = async (offset, limit) => {
   try {
     const response = await api.get('/v1/doctor/all', { params: { offset, limit } })
@@ -121,9 +178,9 @@ export const deletePatient = async (patientId) => {
   }
 }
 
-export const onAuthenticate = async (login, password) => {
+export const onAuthenticate = async (email, password) => {
   try {
-    const response = await api.post('/api/v1/auth', { login, password })
+    const response = await api.post('/v1/admin/auth', { email, password })
     return response.data.token
   } catch (error) {
     console.log(error)

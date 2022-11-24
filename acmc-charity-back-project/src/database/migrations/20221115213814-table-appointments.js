@@ -12,12 +12,16 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         references: { model: 'Patients', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       doctor_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
         references: { model: 'Doctors', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       date: {
         type: Sequelize.STRING,

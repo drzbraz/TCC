@@ -10,28 +10,75 @@ import { Button } from '@mui/material'
 import PrintIcon from '@mui/icons-material/Print'
 import { useRouter } from 'next/router'
 import ReactToPrint from 'react-to-print'
+import { createAppointment } from '../../infra/api.js'
+import { toast } from 'react-toastify'
+
 export default function AppointmentNew({ params }) {
-  const [patient, setPatient] = useState({})
-  const [name, setName] = useState('')
-  const [isActiveSignature, setIsActiveSignature] = useState(false)
-  const [cpf, setCpf] = useState('')
-  const [birthday, setBirthday] = useState('')
-  const [contact, setContact] = useState('')
-  const [zipCode, setZipCode] = useState('')
+  const [patientId, setPatientId] = useState(0)
+  const [patientCpf, setPatientCpf] = useState('')
+  const [patientBirthday, setPatientBirthday] = useState('')
+  const [doctorId, setDoctorId] = useState(0)
+  const [doctorCpf, setDoctorCpf] = useState('')
+  const [doctorBirthday, setDoctorBirthday] = useState('')
+  const [appointment, setAppointment] = useState('')
   const [diagnosis, setDiagnosis] = useState('')
-  const [number, setNumber] = useState('')
-  const [neighborhood, setNeighborhood] = useState('')
-  const [city, setCity] = useState('')
-  const [state, setState] = useState('')
   const router = useRouter()
   const { id } = router.query
 
   const componentRef = useRef()
 
+  async function create() {
+    const statusCode = await createAppointment({
+      patient_id: patientId,
+      doctor_id: doctorId,
+      date: appointment,
+      diagnoses: diagnosis
+    })
+    if (statusCode === 200) {
+      toast.success('Salvo com sucesso 😁', {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored'
+      })
+      router.push('/appointment')
+      return
+    }
+    toast.error('Ops algo deu errado 😅', {
+      position: 'bottom-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored'
+    })
+  }
   return (
     <>
       <Header />
-      <AppointmentForm ref={componentRef} />
+      <AppointmentForm
+        ref={componentRef}
+        setPatientId={setPatientId}
+        setDoctorId={setDoctorId}
+        setPatientCpf={setPatientCpf}
+        patientCpf={patientCpf}
+        setPatientBirthday={setPatientBirthday}
+        patientBirthday={patientBirthday}
+        setDoctorCpf={setDoctorCpf}
+        doctorCpf={doctorCpf}
+        doctorBirthday={doctorBirthday}
+        appointment={appointment}
+        setAppointment={setAppointment}
+        diagnosis={diagnosis}
+        setDiagnosis={setDiagnosis}
+        setDoctorBirthday={setDoctorBirthday}
+      />
       <div>
         <ReactToPrint
           trigger={() => (
@@ -45,12 +92,7 @@ export default function AppointmentNew({ params }) {
         />
       </div>
       <Styles.Row>
-        <Button
-          variant="contained"
-          style={{ marginRight: '24px' }}
-          color="secondary"
-          onClick={() => router.push(`patient/edit/${row.id}`)}
-        >
+        <Button variant="contained" style={{ marginRight: '24px' }} color="secondary" onClick={create}>
           Confirmar
         </Button>
         <Button

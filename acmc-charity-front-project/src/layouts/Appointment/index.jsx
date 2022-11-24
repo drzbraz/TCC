@@ -10,11 +10,13 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import TextField from '@mui/material/TextField'
 import SearchIcon from '@mui/icons-material/Search'
+import { getAppointmentList, deleteAppointment, searchAppointmentRequest } from '../../infra/api.js'
+import { toast } from 'react-toastify'
 
 export default function Appointment() {
   const router = useRouter()
@@ -22,7 +24,7 @@ export default function Appointment() {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [searchAppointment, setSearchAppointment] = useState('')
-
+  const [appointmentList, setAppointmentList] = useState([])
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
@@ -43,6 +45,41 @@ export default function Appointment() {
     createData(4, 'Lucas Ravacini', 'Lucas Augusto', '18/10/2022'),
     createData(5, 'Lucas Duarte', 'Robert Veloso', '18/11/2022')
   ]
+
+  async function search(name) {
+    console.log(name, 'test')
+    const doctors = await searchAppointmentRequest(name)
+    console.log(doctors)
+    setAppointmentList(doctors)
+  }
+
+  async function getAppointment(page, rowsPerPage) {
+    const doctor = await getAppointmentList(0, 5)
+    setAppointmentList(doctor)
+  }
+
+  async function deletefunc(doctorId) {
+    const shouldDelete = confirm('Deseja excluir a consulta?')
+    console.log(shouldDelete)
+    if (shouldDelete) {
+      await deleteAppointment(doctorId)
+      getAppointment(page, rowsPerPage)
+      toast.info('Excluído com sucesso 😁', {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored'
+      })
+    }
+  }
+  useEffect(() => {
+    getAppointment(page, rowsPerPage)
+  }, [])
+
   return (
     <>
       <Header />
@@ -82,9 +119,8 @@ export default function Appointment() {
               height: '40px',
               marginLeft: '12px'
             }}
-            onClick={() => router.push(`patient/new`)}
+            onClick={() => search(searchAppointment)}
           >
-            {' '}
             <SearchIcon />
           </Button>
         </div>
@@ -100,20 +136,20 @@ export default function Appointment() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                {appointmentList?.map((row) => (
+                  <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell component="th" scope="row">
-                      {row.name}
+                      {row?.patient ? row?.patient[0]?.name : row['patient.name']}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {row.fat}
+                      {row?.doctor ? row?.doctor?.[0]?.name : row['doctor.name']}
                     </TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
+                    <TableCell align="center">{row.date}</TableCell>
                     <TableCell align="center">
                       <Button onClick={() => router.push(`appointment/edit/${row.id}`)}>
                         <EditIcon />
                       </Button>
-                      <Button onClick={() => router.push(`doctor/edit/${row.id}`)}>
+                      <Button onClick={() => deletefunc(row.id)}>
                         <DeleteIcon />
                       </Button>{' '}
                     </TableCell>
@@ -123,9 +159,9 @@ export default function Appointment() {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
+            rowsPerPageOptions={[5, 10]}
             component="div"
-            count={rows.length}
+            count={appointmentList?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

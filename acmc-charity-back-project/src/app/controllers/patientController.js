@@ -1,5 +1,4 @@
 import Patient from '../models/Patient.js';
-import Appointment from '../models/Appointment.js';
 import * as Yup from 'yup';
 
 import Sequelize from 'sequelize';
@@ -41,8 +40,6 @@ class PatientController {
     }
 
     const condition = { where: { id: patientId } };
-
-    await Appointment.destroy(condition);
     await Patient.destroy(condition);
     res.json();
   }
